@@ -26,17 +26,40 @@ void swap(uint256 &a, uint256 &b) {
   b = tmp;
 }
 
-void FFT(uint256 *elems, uint32 n, uint32 lg, uint256 omega) {
+void FFT(uint256 *elems, uint32 n, uint32 lg) {
+  uint256 omega = ROOT;
+  for(int i = 0; i < S - lg; i++) omega = mulmod(omega, omega);
+
   for(uint32 k = 0; k < n; k++) {
     uint32 rk = bitreverse(k, lg);
     if(k < rk)
       swap(elems[k], elems[rk]);
   }
+
+  uint32 m = 1;
+  for(int i = 0; i < lg; i++) {
+    uint256 w_m = powmod(omega, n / (2*m));
+    uint32 k = 0;
+    while(k < n) {
+      uint256 w = ONE;
+      for(int j = 0; j < m; j++) {
+        uint256 t = elems[k+j+m];
+        t = mulmod(t, w);
+        uint256 tmp = elems[k+j];
+        tmp = submod(tmp, t);
+        elems[k+j+m] = tmp;
+        elems[k+j] = addmod(elems[k+j], t);
+        w = mulmod(w, w_m);
+      }
+      k += 2*m;
+    }
+    m *= 2;
+  }
 }
 
 int main() {
   print_test(test1);
-  FFT(test1, 16, 4, ONE);
+  FFT(test1, 16, 4);
   cout<<"===\n";
   print_test(test1);
 }
