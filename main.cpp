@@ -20,10 +20,10 @@ uint32 bitreverse(uint32 n, uint32 bits) {
   return r;
 }
 
-void swap(uint256 &a, uint256 &b) {
-  uint256 tmp = a;
-  a = b;
-  b = tmp;
+void swap(uint256 *a, uint256 *b) {
+  uint256 tmp = *a;
+  *a = *b;
+  *b = tmp;
 }
 
 void FFT(uint256 *elems, uint32 n, uint32 lg, uint256 omega) {
@@ -31,7 +31,7 @@ void FFT(uint256 *elems, uint32 n, uint32 lg, uint256 omega) {
   for(uint32 k = 0; k < n; k++) {
     uint32 rk = bitreverse(k, lg);
     if(k < rk)
-      swap(elems[k], elems[rk]);
+      swap(&elems[k], &elems[rk]);
   }
 
   uint32 m = 1;

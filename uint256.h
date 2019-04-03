@@ -4,27 +4,21 @@
 typedef unsigned int uint32;
 typedef unsigned long long uint64;
 
-struct uint256 {
+typedef struct {
   uint32 val[8];
-};
+} uint256;
 
-void print(uint256 v) {
-  printf("0x%08llx%08llx%08llx%08llx%08llx%08llx%08llx%08llx",
-    v.val[7],v.val[6],v.val[5],v.val[4],v.val[3],v.val[2],v.val[1],v.val[0]);
-}
+uint256 P = {0x00000001,0xffffffff,0xfffe5bfe,0x53bda402,
+             0x09a1d805,0x3339d808,0x299d7d48,0x73eda753};
 
+uint256 ONE = {0x00000001,0x00000000,0x00000000,0x00000000,
+               0x00000000,0x00000000,0x00000000,0x00000000};
 
-uint256 P({0x00000001,0xffffffff,0xfffe5bfe,0x53bda402,
-            0x09a1d805,0x3339d808,0x299d7d48,0x73eda753});
+uint256 GEN = {0x00000007,0x00000000,0x00000000,0x00000000,
+               0x00000000,0x00000000,0x00000000,0x00000000};
 
-uint256 ONE({0x00000001,0x00000000,0x00000000,0x00000000,
-              0x00000000,0x00000000,0x00000000,0x00000000});
-
-uint256 GEN({0x00000007,0x00000000,0x00000000,0x00000000,
-              0x00000000,0x00000000,0x00000000,0x00000000});
-
-uint256 R2({0xf3f29c6d,0xc999e990,0x87925c23,0x2b6cedcb,
-            0x7254398f,0x05d31496,0x9f59ff11,0x0748d9d9});
+uint256 R2 = {0xf3f29c6d,0xc999e990,0x87925c23,0x2b6cedcb,
+              0x7254398f,0x05d31496,0x9f59ff11,0x0748d9d9};
 
 uint32 P0INV = 4294967295;
 
@@ -32,11 +26,12 @@ uint32 P0INV = 4294967295;
 uint32 S = 32;
 
 // 2^32th root of unity
-uint256 ROOT({0x439f0d2b,0x3829971f,0x8c2280b9,0xb6368350,
-              0x22c813b4,0xd09b6819,0xdfe81f20,0x16a2a19e});
+uint256 ROOT = {0x439f0d2b,0x3829971f,0x8c2280b9,0xb6368350,
+                 0x22c813b4,0xd09b6819,0xdfe81f20,0x16a2a19e};
 
 uint256 create(uint32 v) {
-  return uint256({v,0,0,0,0,0,0,0});
+  uint256 ret = {v,0,0,0,0,0,0,0};
+  return ret;
 }
 
 void add_digit(uint32 *res, uint32 index, uint32 num) {
@@ -113,7 +108,7 @@ uint256 mul_reduce(uint256 a, uint256 b) {
 }
 
 uint256 mulmod(uint256 a, uint256 b) {
-  return mul_reduce(mul_reduce(mul_reduce(a, R2), mul_reduce(b, R2)), create(1));
+  return mul_reduce(mul_reduce(mul_reduce(a, R2), mul_reduce(b, R2)), ONE);
 }
 
 uint256 negmod(uint256 a) {
@@ -139,6 +134,11 @@ uint256 powmod(uint256 b, uint64 p) {
     b = mulmod(b, b);
   }
   return res;
+}
+
+void print(uint256 v) {
+  printf("0x%08llx%08llx%08llx%08llx%08llx%08llx%08llx%08llx",
+    v.val[7],v.val[6],v.val[5],v.val[4],v.val[3],v.val[2],v.val[1],v.val[0]);
 }
 
 #endif
