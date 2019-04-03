@@ -131,14 +131,14 @@ uint256 addmod(uint256 a, uint256 b) {
 }
 
 uint256 powmod(uint256 b, uint64 p) {
-  if (p == 0)
-    return create(1);
-  uint256 t = powmod(b, p / 2);
-  t = mulmod(t, t);
-  if (p % 2 == 0)
-    return t;
-  else
-    return mulmod(b, t);
+  uint256 res = ONE;
+  while(p > 0) {
+    if (p & 1)
+      res = mulmod(res, b);
+    p = p >> 1;
+    b = mulmod(b, b);
+  }
+  return res;
 }
 
 #endif
