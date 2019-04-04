@@ -108,7 +108,7 @@ uint256 mul_reduce(uint256 a, uint256 b) {
 }
 
 uint256 mulmod(uint256 a, uint256 b) {
-  return mul_reduce(mul_reduce(mul_reduce(a, R2), mul_reduce(b, R2)), ONE);
+  return mul_reduce(mul_reduce(a, b), R2);
 }
 
 uint256 negmod(uint256 a) {
