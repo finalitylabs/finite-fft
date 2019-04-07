@@ -29,6 +29,7 @@ r = b ** 8
 r2 = r * r % p
 rinv = modinv(0x00000001, p)
 pvar('P', p)
+pvar('R', r % p)
 pvar('R2', r2)
 pvar('RINV', rinv)
 pvar('ROOT', root_of_unity)
