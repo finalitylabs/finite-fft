@@ -17,6 +17,9 @@ uint256 ONE = {0x00000001,0x00000000,0x00000000,0x00000000,
 uint256 GEN = {0x00000007,0x00000000,0x00000000,0x00000000,
                0x00000000,0x00000000,0x00000000,0x00000000};
 
+uint256 R = {0xfffffffe,0x00000001,0x00034802,0x5884b7fa,
+             0xecbc4ff5,0x998c4fef,0xacc5056f,0x1824b159};
+
 uint256 R2 = {0xf3f29c6d,0xc999e990,0x87925c23,0x2b6cedcb,
               0x7254398f,0x05d31496,0x9f59ff11,0x0748d9d9};
 
@@ -108,7 +111,7 @@ uint256 mul_reduce(uint256 a, uint256 b) {
 }
 
 uint256 mulmod(uint256 a, uint256 b) {
-  return mul_reduce(mul_reduce(a, b), R2);
+  return mul_reduce(a, b);
 }
 
 uint256 negmod(uint256 a) {
@@ -126,7 +129,7 @@ uint256 addmod(uint256 a, uint256 b) {
 }
 
 uint256 powmod(uint256 b, uint64 p) {
-  uint256 res = ONE;
+  uint256 res = R;
   while(p > 0) {
     if (p & 1)
       res = mulmod(res, b);

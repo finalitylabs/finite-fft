@@ -39,7 +39,7 @@ void FFT(uint256 *elems, uint32 n, uint32 lg, uint256 omega) {
     uint256 w_m = powmod(omega, n / (2*m));
     uint32 k = 0;
     while(k < n) {
-      uint256 w = ONE;
+      uint256 w = R; // R is equivalence of ONE in montgomery form
       for(int j = 0; j < m; j++) {
         uint256 t = elems[k+j+m];
         t = mulmod(t, w);
@@ -56,10 +56,15 @@ void FFT(uint256 *elems, uint32 n, uint32 lg, uint256 omega) {
 }
 
 int main() {
+  for(int i = 0; i < 16; i++) test1_elements[i] = mul_reduce(test1_elements[i], R2);
+  test1_omega = mul_reduce(test1_omega, R2);
   FFT(test1_elements, 16, 4, test1_omega);
-  FFT(test2_elements, 16, 4, test2_omega);
-
+  for(int i = 0; i < 16; i++) test1_elements[i] = mul_reduce(test1_elements[i], ONE);
   print_test(test1_elements);
   cout<<"===\n";
+  for(int i = 0; i < 16; i++) test2_elements[i] = mul_reduce(test2_elements[i], R2);
+  test2_omega = mul_reduce(test2_omega, R2);
+  FFT(test2_elements, 16, 4, test2_omega);
+  for(int i = 0; i < 16; i++) test2_elements[i] = mul_reduce(test2_elements[i], ONE);
   print_test(test2_elements);
 }
