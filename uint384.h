@@ -16,7 +16,7 @@ typedef struct { uint32 val[12]; } uint384;
 #define ONE ((uint384){{0x0002fffd,0x76090000,0xc40c0002,0xebf4000b,0x53c758ba,0x5f489857,0x70525745,0x77ce5853,0xa256ec6d,0x5c071a97,0xfa80e493,0x15f65ec3}})
 
 // -(1/P.val[0]) mod B
-#define INV ((uint32)2257537603)
+#define INV ((uint32)4294770685)
 
 // Adds `num` to `i`th digit of `res` and propagates carry in case of overflow
 void add_digit(uint32 *res, uint32 num) {
