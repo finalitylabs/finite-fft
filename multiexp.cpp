@@ -16,7 +16,12 @@ int main() {
   uint384 y = {{0x8c2dce41,0x6cb0ed93,0xd3c25273,0xc3de3733,0x5912ea64,0x0e841707,0x8e713d34,0x72d73d89,0xddfcfbb7,0x6bc96aa1,0x90a45394,0x04365c83}};
   x = mulmod(x, R2); y = mulmod(y, R2);
 
-  x = mulmod(x, ONEE); y = mulmod(y, ONEE);
+  affine aff = {x, y, false};
+  projective p = {x, y, ONE};
+  p = doub(p);
+  p = add(p, aff);
+
+  x = mulmod(p.x, ONEE); y = mulmod(p.y, ONEE);
   print(x); cout<<endl;
   print(y); cout<<endl;
 }
