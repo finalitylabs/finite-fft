@@ -15,6 +15,8 @@ typedef struct { uint32 val[12]; } uint384;
 // Montgomery form of 1 = (1 * R mod P)
 #define ONE ((uint384){{0x0002fffd,0x76090000,0xc40c0002,0xebf4000b,0x53c758ba,0x5f489857,0x70525745,0x77ce5853,0xa256ec6d,0x5c071a97,0xfa80e493,0x15f65ec3}})
 
+#define ZERO ((uint384){{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}})
+
 // -(1/P.val[0]) mod B
 #define INV ((uint32)4294770685)
 
@@ -26,6 +28,14 @@ void add_digit(uint32 *res, uint32 num) {
     res++;
     while(++(*(res++)) == 0);
   }
+}
+
+// Greater than or equal
+bool eq(uint384 a, uint384 b) {
+  for(int i = 11; i >= 0; i--)
+    if(a.val[i] != b.val[i])
+      return false;
+  return true;
 }
 
 // Greater than or equal
