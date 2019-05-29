@@ -3,21 +3,17 @@
 #include "tests.h"
 using namespace std;
 
+void print(uint256 v) {
+  printf("0x%08llx%08llx%08llx%08llx%08llx%08llx%08llx%08llx",
+    v.val[7],v.val[6],v.val[5],v.val[4],v.val[3],v.val[2],v.val[1],v.val[0]);
+}
+
 void print_test(uint256 test[]) {
   for(int i = 0; i < 16; i++) {
     cout<<"Fp(";
     print(test[i]);
     cout<<")\n";
   }
-}
-
-uint32 bitreverse(uint32 n, uint32 bits) {
-  uint32 r = 0;
-  for(int i = 0; i < bits; i++) {
-    r = (r << 1) | (n & 1);
-    n >>= 1;
-  }
-  return r;
 }
 
 void swap(uint256 *a, uint256 *b) {
@@ -39,7 +35,7 @@ void FFT(uint256 *elems, uint32 n, uint32 lg, uint256 omega) {
     uint256 w_m = powmod(omega, n / (2*m));
     uint32 k = 0;
     while(k < n) {
-      uint256 w = R; // R is equivalence of ONE in montgomery form
+      uint256 w = ONE;
       for(int j = 0; j < m; j++) {
         uint256 t = elems[k+j+m];
         t = mulmod(t, w);
@@ -55,16 +51,19 @@ void FFT(uint256 *elems, uint32 n, uint32 lg, uint256 omega) {
   }
 }
 
+#define ONEE ((uint256){{0x00000001,0x00000000,0x00000000,0x00000000, 0x00000000,0x00000000,0x00000000,0x00000000}})
+#define R2 ((uint256){{0xf3f29c6d,0xc999e990,0x87925c23,0x2b6cedcb, 0x7254398f,0x05d31496,0x9f59ff11,0x0748d9d9}})
+
 int main() {
-  for(int i = 0; i < 16; i++) test1_elements[i] = mul_reduce(test1_elements[i], R2);
-  test1_omega = mul_reduce(test1_omega, R2);
+  for(int i = 0; i < 16; i++) test1_elements[i] = mulmod(test1_elements[i], R2);
+  test1_omega = mulmod(test1_omega, R2);
   FFT(test1_elements, 16, 4, test1_omega);
-  for(int i = 0; i < 16; i++) test1_elements[i] = mul_reduce(test1_elements[i], ONE);
+  for(int i = 0; i < 16; i++) test1_elements[i] = mulmod(test1_elements[i], ONEE);
   print_test(test1_elements);
   cout<<"===\n";
-  for(int i = 0; i < 16; i++) test2_elements[i] = mul_reduce(test2_elements[i], R2);
-  test2_omega = mul_reduce(test2_omega, R2);
+  for(int i = 0; i < 16; i++) test2_elements[i] = mulmod(test2_elements[i], R2);
+  test2_omega = mulmod(test2_omega, R2);
   FFT(test2_elements, 16, 4, test2_omega);
-  for(int i = 0; i < 16; i++) test2_elements[i] = mul_reduce(test2_elements[i], ONE);
+  for(int i = 0; i < 16; i++) test2_elements[i] = mulmod(test2_elements[i], ONEE);
   print_test(test2_elements);
 }
