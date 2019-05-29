@@ -1,2 +1,2 @@
-all:
-	g++ *.cpp -o finitefft
+fft:
+	g++ fft.cpp -o finitefft
