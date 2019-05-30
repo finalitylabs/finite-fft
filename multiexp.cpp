@@ -6,6 +6,7 @@
 #define ZERO ((field){{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}})
 #define INV ((uint32)4294770685)
 #include "field.h"
+#include "field2.h"
 
 #include "ec.h"
 using namespace std;
