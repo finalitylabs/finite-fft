@@ -1,14 +1,21 @@
 #include <iostream>
-#include "uint256.h"
+
+#define LIMBS 8
+#define P ((field){{0x00000001,0xffffffff,0xfffe5bfe,0x53bda402,0x09a1d805,0x3339d808,0x299d7d48,0x73eda753}})
+#define ONE ((field){{0xfffffffe,0x00000001,0x00034802,0x5884b7fa,0xecbc4ff5,0x998c4fef,0xacc5056f,0x1824b159}})
+#define ZERO ((field){{0, 0, 0, 0, 0, 0, 0, 0}})
+#define INV ((uint32)4294967295)
+#include "field.h"
+
 #include "tests.h"
 using namespace std;
 
-void print(uint256 v) {
+void print(field v) {
   printf("0x%08llx%08llx%08llx%08llx%08llx%08llx%08llx%08llx",
     v.val[7],v.val[6],v.val[5],v.val[4],v.val[3],v.val[2],v.val[1],v.val[0]);
 }
 
-void print_test(uint256 test[]) {
+void print_test(field test[]) {
   for(int i = 0; i < 16; i++) {
     cout<<"Fp(";
     print(test[i]);
@@ -16,13 +23,13 @@ void print_test(uint256 test[]) {
   }
 }
 
-void swap(uint256 *a, uint256 *b) {
-  uint256 tmp = *a;
+void swap(field *a, field *b) {
+  field tmp = *a;
   *a = *b;
   *b = tmp;
 }
 
-void FFT(uint256 *elems, uint32 n, uint32 lg, uint256 omega) {
+void FFT(field *elems, uint32 n, uint32 lg, field omega) {
 
   for(uint32 k = 0; k < n; k++) {
     uint32 rk = bitreverse(k, lg);
@@ -32,14 +39,14 @@ void FFT(uint256 *elems, uint32 n, uint32 lg, uint256 omega) {
 
   uint32 m = 1;
   for(int i = 0; i < lg; i++) {
-    uint256 w_m = powmod(omega, n / (2*m));
+    field w_m = powmod(omega, n / (2*m));
     uint32 k = 0;
     while(k < n) {
-      uint256 w = ONE;
+      field w = ONE;
       for(int j = 0; j < m; j++) {
-        uint256 t = elems[k+j+m];
+        field t = elems[k+j+m];
         t = mulmod(t, w);
-        uint256 tmp = elems[k+j];
+        field tmp = elems[k+j];
         tmp = submod(tmp, t);
         elems[k+j+m] = tmp;
         elems[k+j] = addmod(elems[k+j], t);
@@ -51,8 +58,8 @@ void FFT(uint256 *elems, uint32 n, uint32 lg, uint256 omega) {
   }
 }
 
-#define ONEE ((uint256){{0x00000001,0x00000000,0x00000000,0x00000000, 0x00000000,0x00000000,0x00000000,0x00000000}})
-#define R2 ((uint256){{0xf3f29c6d,0xc999e990,0x87925c23,0x2b6cedcb, 0x7254398f,0x05d31496,0x9f59ff11,0x0748d9d9}})
+#define ONEE ((field){{0x00000001,0x00000000,0x00000000,0x00000000, 0x00000000,0x00000000,0x00000000,0x00000000}})
+#define R2 ((field){{0xf3f29c6d,0xc999e990,0x87925c23,0x2b6cedcb, 0x7254398f,0x05d31496,0x9f59ff11,0x0748d9d9}})
 
 int main() {
   for(int i = 0; i < 16; i++) test1_elements[i] = mulmod(test1_elements[i], R2);
