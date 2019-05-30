@@ -26,8 +26,8 @@ int main() {
 
   affine aff = {x, y, false};
   projective p = {x, y, ONE};
-  p = doub(p);
-  p = add(p, aff);
+  p = ec_double(p);
+  p = ec_add(p, aff);
 
   x = mulmod(p.x, ONEE); y = mulmod(p.y, ONEE);
   print(x); cout<<endl;

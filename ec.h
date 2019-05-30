@@ -10,7 +10,7 @@ typedef struct {
   field z;
 } projective;
 
-projective doub(projective inp) {
+projective ec_double(projective inp) {
   if(eq(inp.z, ZERO)) return inp;
   field a = mulmod(inp.x, inp.x); // A = X1^2
   field b = mulmod(inp.y, inp.y); // B = Y1^2
@@ -35,7 +35,7 @@ projective doub(projective inp) {
   return inp;
 }
 
-projective add(projective a, affine b) {
+projective ec_add(projective a, affine b) {
   if(b.inf) return a;
 
   if(eq(a.z, ZERO)) {
@@ -50,7 +50,7 @@ projective add(projective a, affine b) {
   field s2 = mulmod(mulmod(b.y, a.z), z1z1);
 
   if(eq(a.x, u2) && eq(b.y, s2))
-    return doub(a);
+    return ec_double(a);
   else {
     field h = submod(u2, a.x); // H = U2-X1
     field hh = mulmod(h, h); // HH = H^2
