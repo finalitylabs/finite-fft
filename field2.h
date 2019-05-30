@@ -1,3 +1,6 @@
+#define ZERO2 ((field2){ZERO, ZERO})
+#define ONE2 ((field2){ONE, ZERO})
+
 typedef struct {
   field c0;
   field c1;
