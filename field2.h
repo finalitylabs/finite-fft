@@ -9,14 +9,17 @@ bool eq2(field2 a, field2 b) {
 field2 negmod2(field2 a) {
   a.c0 = negmod(a.c0);
   a.c1 = negmod(a.c1);
+  return a;
 }
 field2 submod2(field2 a, field2 b) {
   a.c0 = submod(a.c0, b.c0);
   a.c1 = submod(a.c1, b.c1);
+  return a;
 }
 field2 addmod2(field2 a, field2 b) {
   a.c0 = addmod(a.c0, b.c0);
   a.c1 = addmod(a.c1, b.c1);
+  return a;
 }
 field2 mulmod2(field2 a, field2 b) {
   field aa = mulmod(a.c0, b.c0);
